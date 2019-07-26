@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import RicercaFile.FileDialogWindows;
 
 public class EleborazioneDatiART extends Finestra{
@@ -176,7 +178,9 @@ public class EleborazioneDatiART extends Finestra{
 						//per salvare il file definitivo utilizzo l'oggetto JFileChooser per scegliere il percorso
 						//e il nome del file
 						JFileChooser sceltafile = new JFileChooser();
-						//sceltafile.setFileFilter(filter);
+						FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						        "File di testo", "txt");
+						sceltafile.setFileFilter(filter);
 						int n=sceltafile.showSaveDialog(finestrastruttura);
 						if (n == JFileChooser.APPROVE_OPTION) {
 							File f=sceltafile.getSelectedFile();
