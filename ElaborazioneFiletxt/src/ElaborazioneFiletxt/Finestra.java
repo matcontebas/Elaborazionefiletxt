@@ -52,10 +52,18 @@ abstract class Finestra {
 		JButton btnSalva = new JButton("Salva");
 		btnSalva.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				salvafile(percorsocompleto.toString());
+				salvafile(percorsocompleto.toString(),true);
 			}
 		});
 		panello_Bottone.add(btnSalva);
+		
+		JButton btnMerge = new JButton("Merge");
+		btnMerge.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mergefile();
+			}
+		});
+		panello_Bottone.add(btnMerge);
 
 		JPanel panello_testi = new JPanel();
 		finestrastruttura.getContentPane().add(panello_testi, BorderLayout.CENTER);
@@ -79,7 +87,17 @@ abstract class Finestra {
 	 * all'elaborazione.
 	 */
 	abstract void elaborazionetesto();
-	abstract void salvafile(String percorso);
+	/**
+	 * Il metodo salvafile salva il file associato nel percorso modificandone il nome (se modificanomefile=true)
+	 * con il suffisso _Elaborato
+	 * @param percorso il percorso del file da salvare
+	 * @param modificanomefile se vero, aggiunge al nome del file il suffisso _Elaborato altrimenti no
+	 */
+	abstract void salvafile(String percorso,boolean modificanomefile);
+	/**
+	 * Fa il merge dei due file elaborati
+	 */
+	abstract void mergefile();
 
 }
 

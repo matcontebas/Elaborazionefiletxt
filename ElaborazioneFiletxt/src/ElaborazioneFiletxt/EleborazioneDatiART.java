@@ -8,12 +8,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
 import RicercaFile.FileDialogWindows;
 
 public class EleborazioneDatiART extends Finestra{
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public EleborazioneDatiART() {
 		// TODO Auto-generated constructor stub
 	}
@@ -87,18 +90,23 @@ public class EleborazioneDatiART extends Finestra{
 		}
 		//fine ricerca file
 	}
-	public void salvafile(String percorso) {
+	public void salvafile(String percorso, boolean modificanomefile) {
 		//controllo che la stringa non sia vuota nel qual caso non si fa nulla
 		if (percorso.length()!=0) {
-			/*definisco l'oggetto fin di tipo file per determinare il path del file origine
-			con il quale ricostruire il nome del path e del file destinazione con i metodi
-			degli oggetti File. Questo metodo mi consente di slegarmi dalle convenzioni
-			dei percorsi tra windows e linux*/
-			File fin=new File(percorso);
-			String percorsofileinput=fin.getPath();
-			//Isolo la sottostringa per modificare il nome del file
-			String temp= percorsofileinput.substring(0, percorsofileinput.lastIndexOf('.'));
-			String fileoutPercorso= temp +"_Elaborato"+".txt";
+			String fileoutPercorso;
+			if (modificanomefile) {
+				/*definisco l'oggetto fin di tipo file per determinare il path del file origine
+						con il quale ricostruire il nome del path e del file destinazione con i metodi
+						degli oggetti File. Questo metodo mi consente di slegarmi dalle convenzioni
+						dei percorsi tra windows e linux*/
+				File fin = new File(percorso);
+				String percorsofileinput = fin.getPath();
+				//Isolo la sottostringa per modificare il nome del file
+				String temp = percorsofileinput.substring(0, percorsofileinput.lastIndexOf('.'));
+				fileoutPercorso = temp + "_Elaborato" + ".txt";
+			} else {
+				fileoutPercorso=percorso;
+			}
 			JOptionPane.showMessageDialog(finestrastruttura, fileoutPercorso, "Percorso file out",JOptionPane.INFORMATION_MESSAGE);
 			File fout=new File(fileoutPercorso);
 			try {
@@ -117,5 +125,77 @@ public class EleborazioneDatiART extends Finestra{
 		}
 
 
+	}
+	public void mergefile() {
+		boolean controlloflusso=false;
+		FileDialogWindows file1 = new FileDialogWindows("File di testo","txt");
+		if (file1.getEsito()==1) {
+			File f1=new File(file1.percorsofile());
+			try {
+				FileReader f1r = new FileReader(f1);
+				BufferedReader b1r=new BufferedReader(f1r);
+				String st;
+				StringBuffer contenuto=new StringBuffer();
+				while ((st=b1r.readLine())!=null) {
+					//memorizzo il contenuto del file in contenuto variabile di tipo StringBuffer
+					contenuto.append(st+"\n");
+				}
+				JOptionPane.showMessageDialog(finestrastruttura, "File letto", "Righe lette", JOptionPane.INFORMATION_MESSAGE);
+				txtArea.setText(contenuto.toString());
+				controlloflusso=true;
+				f1r.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+				controlloflusso=false;
+				e.printStackTrace();
+			}
+		}
+		//----------- Parto con il file2------------------
+		//Parto con il file 2 solo se è stato elaborato il file 1 (controlloflusso=vero)
+		if (controlloflusso) {
+			FileDialogWindows file2 = new FileDialogWindows("File di testo", "txt");
+			if (file2.getEsito()==1) {
+				File f2=new File(file2.percorsofile());
+				try {
+					FileReader f2r =new FileReader(f2);
+					BufferedReader b2r = new BufferedReader(f2r);
+					String temp;
+					StringBuffer contenuto2=new StringBuffer();
+					try {
+						while ((temp=b2r.readLine())!=null) {
+							//l'if successivo serve per escludere la riga di intestazione del secondo file
+							if (temp.startsWith("RR")) {
+								//memorizzo il contenuto del file in contenuto variabile di tipo StringBuffer
+								contenuto2.append(temp + "\n");
+							}
+						}
+						JOptionPane.showMessageDialog(finestrastruttura, "File letto", "Righe lette", JOptionPane.INFORMATION_MESSAGE);
+						f2r.close();
+						//Faccio il merge dei due file
+						txtArea.setText(txtArea.getText()+contenuto2.toString());
+						//per salvare il file definitivo utilizzo l'oggetto JFileChooser per scegliere il percorso
+						//e il nome del file
+						JFileChooser sceltafile = new JFileChooser();
+						//sceltafile.setFileFilter(filter);
+						int n=sceltafile.showSaveDialog(finestrastruttura);
+						if (n == JFileChooser.APPROVE_OPTION) {
+							File f=sceltafile.getSelectedFile();
+							JOptionPane.showMessageDialog(finestrastruttura, f.getPath());
+							salvafile(f.getPath(),false);
+						} else {
+							JOptionPane.showMessageDialog(finestrastruttura, "Scegliere il nome del file su cui fare il merge", "Warning", JOptionPane.WARNING_MESSAGE);
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						controlloflusso=false;
+						e.printStackTrace();
+					}
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					controlloflusso=false;
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
