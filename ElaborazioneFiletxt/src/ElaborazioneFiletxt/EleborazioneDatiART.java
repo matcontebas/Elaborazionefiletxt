@@ -39,8 +39,6 @@ public class EleborazioneDatiART extends Finestra{
 					int righe = 0;
 					int righenonvuote=0;
 					int righecorrette=0;
-					//Acquisizione prima riga di intestazione da togliere una volta sistemato il controllo intestazione
-					//txtArea.setText(br.readLine()+"\n");
 					while ((st=br.readLine())!=null) {
 						//intanto escludiamo le righe vuote
 						int lunghezza=st.length();
@@ -178,6 +176,7 @@ public class EleborazioneDatiART extends Finestra{
 						//per salvare il file definitivo utilizzo l'oggetto JFileChooser per scegliere il percorso
 						//e il nome del file
 						JFileChooser sceltafile = new JFileChooser();
+						//inserimento del filtro per ricercare solamente file di testo
 						FileNameExtensionFilter filter = new FileNameExtensionFilter(
 						        "File di testo", "txt");
 						sceltafile.setFileFilter(filter);
