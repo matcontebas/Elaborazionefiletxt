@@ -35,6 +35,7 @@ public class EleborazioneDatiART extends Finestra{
 				BufferedReader br=new BufferedReader(fr);
 				try {
 					txtArea.setText("");
+					StringBuffer content = new StringBuffer();
 					String st;
 					int righe = 0;
 					int righenonvuote=0;
@@ -50,20 +51,25 @@ public class EleborazioneDatiART extends Finestra{
 							//Fine conteggio righe corrette
 							//Inserire qui controllo per intestazione
 							if(st.startsWith("ID")) {
-								txtArea.setText(txtArea.getText() + st + "\n");
+								//txtArea.setText(txtArea.getText() + st + "\n");
+								content.append(st + "\n");
 							}	else if (st.startsWith("RR")) {
-								txtArea.setText(txtArea.getText() + st + "\n");
+								//txtArea.setText(txtArea.getText() + st + "\n");
+								content.append(st + "\n");
 							} else {
 								//il controllo sulla lunghezza serve per escludere la prima riga di intestazione che va scartata
 								//infatti quando si processa la prima riga la lunghezza txtArea è ancora vuoto.
-								if (txtArea.getText().length()!=0) {
+								if (content.length()!=0) {
 									//Togliere la stringa \n nel testo
-									int lung = txtArea.getText().length();
+									//int lung = txtArea.getText().length();
+									int lungs = content.length();
+									content.deleteCharAt(lungs-1);
 									//Prendo la sottostringa escludendo il carattere \n
-									String modificastringa = (txtArea.getText().substring(0, lung - 1) + " ");
-									txtArea.setText(modificastringa.toString());
+									//String modificastringa = (txtArea.getText().substring(0, lung - 1) + " ");
+									//txtArea.setText(modificastringa);
 									//System.out.println("Stampa carattere" + txtArea.getText().charAt(lung-1)+"Vediamo che esce");
-									txtArea.setText(txtArea.getText() + st + "\n");
+									//txtArea.setText(txtArea.getText() + st + "\n");
+									content.append(" "+ st + "\n");
 								}
 							}
 							righenonvuote++;
@@ -73,6 +79,7 @@ public class EleborazioneDatiART extends Finestra{
 					JOptionPane.showMessageDialog(finestrastruttura, "conteggio righe totali: " + righe,"Righe totali",JOptionPane.INFORMATION_MESSAGE);
 					JOptionPane.showMessageDialog(finestrastruttura, "conteggio righe non vuote: " + righenonvuote, "RIGHE NON VUOTE",JOptionPane.INFORMATION_MESSAGE);
 					JOptionPane.showMessageDialog(finestrastruttura, "conteggio corrette: righe che iniziano con 'RR' e finiscono con ';': " + righecorrette,"RIGHE CORRETTE",JOptionPane.INFORMATION_MESSAGE);
+					txtArea.setText(content.toString());
 					fr.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
