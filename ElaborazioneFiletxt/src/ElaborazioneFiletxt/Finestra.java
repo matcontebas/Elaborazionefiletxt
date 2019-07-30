@@ -22,9 +22,11 @@ import java.awt.event.ActionEvent;
  */
 abstract class Finestra {
 	//Variabili globali
+	/*le variabili JFrame, JTextArea e JPanel le metto globali protected per poterle
+	modificare nella classe derivata*/
 	protected JFrame finestrastruttura;
-	//protected JButton btnAvvio;
 	protected JTextArea txtArea;
+	protected JPanel panello_Bottone;
 	//la variabile percorsocompleto mi serve per salvare il percorso (ed il nome) del file origine
 	//uso un oggetto StringBuffer poichè la stringa è un oggetto immutabile
 	protected StringBuffer percorsocompleto=new StringBuffer();
@@ -38,7 +40,7 @@ abstract class Finestra {
 		finestrastruttura.getContentPane().setBackground(Color.WHITE);
 		finestrastruttura.getContentPane().setLayout(new BorderLayout(0, 0));
 
-		JPanel panello_Bottone = new JPanel();
+		panello_Bottone = new JPanel();
 		finestrastruttura.getContentPane().add(panello_Bottone, BorderLayout.SOUTH);
 
 		JButton btnAvvio = new JButton("Avvio");

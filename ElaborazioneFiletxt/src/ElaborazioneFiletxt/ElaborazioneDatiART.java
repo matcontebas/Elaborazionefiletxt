@@ -8,20 +8,36 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import RicercaFile.FileDialogWindows;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class EleborazioneDatiART extends Finestra{
+public class ElaborazioneDatiART extends Finestra{
 
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public EleborazioneDatiART() {
+	public ElaborazioneDatiART() {
 		// TODO Auto-generated constructor stub
+		/*Inserisco il bottone per eseguire tutto insieme la procedura*/
+		JButton btnEsegui = new JButton("Esegui");
+		btnEsegui.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				esegui_in_sequenza();
+			}
+		});
+		panello_Bottone.add(btnEsegui);
+
 	}
+	/**
+	 * Elabora il file txt in ingresso, lo elabora e lo scrive sull'area di
+	 * testo della finestra.
+	 */
 	public void elaborazionetesto() {
 		FileDialogWindows trovafiletxt = new FileDialogWindows("File di testo","txt");
 		if (trovafiletxt.getEsito()==1) {
@@ -206,6 +222,14 @@ public class EleborazioneDatiART extends Finestra{
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	public void esegui_in_sequenza () {
+		JOptionPane.showMessageDialog(finestrastruttura, "Fornire il percorso dei 2 file", "Avviso", JOptionPane.INFORMATION_MESSAGE);
+				for (int i = 0; i < 2; i++) {
+					//-----INSERIRE CONTROLLO SE VIENE SCELTO IL FILE O MENO
+			elaborazionetesto();
+			salvafile(percorsocompleto.toString(),true);
 		}
 	}
 }
