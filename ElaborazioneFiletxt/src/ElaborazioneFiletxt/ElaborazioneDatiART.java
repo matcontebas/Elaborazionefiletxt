@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -202,6 +203,7 @@ public class ElaborazioneDatiART extends Finestra{
 						f2r.close();
 						//Faccio il merge dei due file
 						txtArea.setText(txtArea.getText()+contenuto2.toString());
+						//------------SALVATAGGIO FILE FINALE----------------
 						//per salvare il file definitivo utilizzo l'oggetto JFileChooser per scegliere il percorso
 						//e il nome del file
 						JFileChooser sceltafile = new JFileChooser();
@@ -231,16 +233,20 @@ public class ElaborazioneDatiART extends Finestra{
 		}
 	}
 	public void esegui_in_sequenza () {
+		/*Definisco un ArrayList per memorizzare i percorsi dei file elaborati in modo che siano disponibili poi
+		 *per il metodo merge.*/
+		ArrayList<String> percorsifile = new ArrayList<String>();
 		JOptionPane.showMessageDialog(finestrastruttura, "Fornire il percorso dei 2 file", "Avviso", JOptionPane.INFORMATION_MESSAGE);
 		boolean esito_elaborazioni_successive=true;
 		for (int i = 0; i < 2; i++) {
 			esito_elaborazioni_successive= elaborazionetesto() && esito_elaborazioni_successive;
 			if (esito_elaborazioni_successive) {
 				//-----INSERIRE CONTROLLO SE VIENE SCELTO IL FILE O MENO
-				salvafile(percorsocompleto.toString(), true);
+				percorsifile.add(salvafile(percorsocompleto.toString(), true));
 			}
 			JOptionPane.showMessageDialog(finestrastruttura, esito_elaborazioni_successive);
 		}
+		System.out.print(percorsifile + "\n");
 		if (esito_elaborazioni_successive) {
 			//Come prende il percorso dei file di cui fare il merge? 
 			mergefile();
