@@ -232,6 +232,43 @@ public class ElaborazioneDatiART extends Finestra{
 			}
 		}
 	}
+	/**
+	 * Overloading metodo mergefile: questo metodo accoda n file di testo in ingresso
+	 * Occorre fornire le n stringhe con i percorsi degli n file di cui fare il merge
+	 * @return: esito delle operazioni. Se true tutto Ok, se false qualcosa è andato male
+	 * @param percorsofilein: VarArgs String serve per prendere in ingresso i percorsi degli n file
+	 */
+	public boolean mergefile (String... percorsofilein) {
+		//Overloading del metodo mergefile o polimorfismo
+		StringBuffer contenuto = new StringBuffer();
+		boolean controlloflusso=true;
+		for (String path : percorsofilein) {
+			if (controlloflusso) {
+				File f = new File(path);
+				try {
+					FileReader f1r = new FileReader(f);
+					BufferedReader b1r = new BufferedReader(f1r);
+					String st;
+					while ((st = b1r.readLine()) != null) {
+						//memorizzo il contenuto del file in contenuto variabile di tipo StringBuffer
+						contenuto.append(st + "\n");
+					}
+					JOptionPane.showMessageDialog(finestrastruttura, "File letto", "Righe lette",
+							JOptionPane.INFORMATION_MESSAGE);
+					txtArea.setText(contenuto.toString());
+					controlloflusso = true;
+					f1r.close();
+				} catch (Exception e) {
+					// TODO: handle exception
+					controlloflusso = false;
+					e.printStackTrace();
+				} 
+			}
+
+		}
+		//da implementare il parametro di ritorno return controlloflusso per dare l'esito
+		return controlloflusso;
+	}
 	public void esegui_in_sequenza () {
 		/*Definisco un ArrayList per memorizzare i percorsi dei file elaborati in modo che siano disponibili poi
 		 *per il metodo merge.*/
@@ -249,7 +286,11 @@ public class ElaborazioneDatiART extends Finestra{
 		System.out.print(percorsifile + "\n");
 		if (esito_elaborazioni_successive) {
 			//Come prende il percorso dei file di cui fare il merge? 
-			mergefile();
+			if(mergefile(percorsifile.get(0),percorsifile.get(1))){
+				JOptionPane.showMessageDialog(finestrastruttura, "Esito Operazione di Merge positiva", "Avviso", JOptionPane.INFORMATION_MESSAGE );
+			} else {
+				JOptionPane.showMessageDialog(finestrastruttura, "Esito Operazione di Merge NEGATIVA", "Avviso", JOptionPane.ERROR_MESSAGE );
+			}
 		}
 	}
 }
