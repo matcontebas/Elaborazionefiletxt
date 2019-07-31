@@ -85,17 +85,18 @@ abstract class Finestra {
 	}
 
 	/**
-	 * Il metodo elabtesto ricerca il file di testo all'interno delle cartelle e provvede
-	 * all'elaborazione.
+	 * Elabora il file txt in ingresso, lo elabora e lo scrive sull'area di
+	 * testo della finestra.
+	 * @return se il risultato dell'elaborazione è andato bene, ritorna true. Altrimenti false.
 	 */
-	abstract void elaborazionetesto();
+	abstract boolean elaborazionetesto();
 	/**
 	 * Il metodo salvafile salva il file associato nel percorso modificandone il nome (se modificanomefile=true)
 	 * con il suffisso _Elaborato
-	 * @param percorso il percorso del file da salvare
+	 * @param percorso il percorso del file di origine
 	 * @param modificanomefile se vero, aggiunge al nome del file il suffisso _Elaborato altrimenti no
 	 */
-	abstract void salvafile(String percorso,boolean modificanomefile);
+	abstract String salvafile(String percorso,boolean modificanomefile);
 	/**
 	 * Fa il merge dei due file elaborati
 	 */

@@ -37,8 +37,9 @@ public class ElaborazioneDatiART extends Finestra{
 	/**
 	 * Elabora il file txt in ingresso, lo elabora e lo scrive sull'area di
 	 * testo della finestra.
+	 * @return se il risultato dell'elaborazione è andato bene, ritorna true. Altrimenti false.
 	 */
-	public void elaborazionetesto() {
+	public boolean elaborazionetesto() {
 		FileDialogWindows trovafiletxt = new FileDialogWindows("File di testo","txt");
 		if (trovafiletxt.getEsito()==1) {
 			File filein =new File(trovafiletxt.percorsofile());
@@ -97,23 +98,27 @@ public class ElaborazioneDatiART extends Finestra{
 					JOptionPane.showMessageDialog(finestrastruttura, "conteggio corrette: righe che iniziano con 'RR' e finiscono con ';': " + righecorrette,"RIGHE CORRETTE",JOptionPane.INFORMATION_MESSAGE);
 					txtArea.setText(content.toString());
 					fr.close();
+					return true;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					//GESTIRE ERRORE
 					e.printStackTrace();
+					return false;
 				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				//GESTIRE ERRORE ACCESSO AL FILE
 				JOptionPane.showMessageDialog(finestrastruttura, "ERRORE DI ACCESSO AL FILE", "ERRORE NELL'ACCESSO AL FILE", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
+				return false;
 			}
 		} else {
 			JOptionPane.showMessageDialog(finestrastruttura, "File non trovato","Ricerca File",JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 		//fine ricerca file
 	}
-	public void salvafile(String percorso, boolean modificanomefile) {
+	public String salvafile(String percorso, boolean modificanomefile) {
 		//controllo che la stringa non sia vuota nel qual caso non si fa nulla
 		if (percorso.length()!=0) {
 			String fileoutPercorso;
@@ -130,7 +135,7 @@ public class ElaborazioneDatiART extends Finestra{
 			} else {
 				fileoutPercorso=percorso;
 			}
-			JOptionPane.showMessageDialog(finestrastruttura, fileoutPercorso, "Percorso file out",JOptionPane.INFORMATION_MESSAGE);
+			//JOptionPane.showMessageDialog(finestrastruttura, fileoutPercorso, "Percorso file out",JOptionPane.INFORMATION_MESSAGE);
 			File fout=new File(fileoutPercorso);
 			try {
 				FileWriter fw=new FileWriter(fout);
@@ -140,14 +145,15 @@ public class ElaborazioneDatiART extends Finestra{
 				bw.close();
 				fw.close();
 				JOptionPane.showMessageDialog(finestrastruttura, "salvataggio completato nel percorso: "+fileoutPercorso, "Salvataggio file",JOptionPane.INFORMATION_MESSAGE);
+				return fileoutPercorso;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(finestrastruttura, "Errore nel salvataggio del file: "+ e, "Errore"+ e,JOptionPane.ERROR_MESSAGE);
+				return "";
 			}
 		}
-
-
+		return "";
 	}
 	public void mergefile() {
 		boolean controlloflusso=false;
@@ -201,7 +207,7 @@ public class ElaborazioneDatiART extends Finestra{
 						JFileChooser sceltafile = new JFileChooser();
 						//inserimento del filtro per ricercare solamente file di testo
 						FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						        "File di testo", "txt");
+								"File di testo", "txt");
 						sceltafile.setFileFilter(filter);
 						int n=sceltafile.showSaveDialog(finestrastruttura);
 						if (n == JFileChooser.APPROVE_OPTION) {
@@ -226,10 +232,18 @@ public class ElaborazioneDatiART extends Finestra{
 	}
 	public void esegui_in_sequenza () {
 		JOptionPane.showMessageDialog(finestrastruttura, "Fornire il percorso dei 2 file", "Avviso", JOptionPane.INFORMATION_MESSAGE);
-				for (int i = 0; i < 2; i++) {
-					//-----INSERIRE CONTROLLO SE VIENE SCELTO IL FILE O MENO
-			elaborazionetesto();
-			salvafile(percorsocompleto.toString(),true);
+		boolean esito_elaborazioni_successive=true;
+		for (int i = 0; i < 2; i++) {
+			esito_elaborazioni_successive= elaborazionetesto() && esito_elaborazioni_successive;
+			if (esito_elaborazioni_successive) {
+				//-----INSERIRE CONTROLLO SE VIENE SCELTO IL FILE O MENO
+				salvafile(percorsocompleto.toString(), true);
+			}
+			JOptionPane.showMessageDialog(finestrastruttura, esito_elaborazioni_successive);
+		}
+		if (esito_elaborazioni_successive) {
+			//Come prende il percorso dei file di cui fare il merge? 
+			mergefile();
 		}
 	}
 }
