@@ -242,6 +242,7 @@ public class ElaborazioneDatiART extends Finestra{
 		//Overloading del metodo mergefile o polimorfismo
 		StringBuffer contenuto = new StringBuffer();
 		boolean controlloflusso=true;
+		int i=0;
 		for (String path : percorsofilein) {
 			if (controlloflusso) {
 				File f = new File(path);
@@ -250,8 +251,19 @@ public class ElaborazioneDatiART extends Finestra{
 					BufferedReader b1r = new BufferedReader(f1r);
 					String st;
 					while ((st = b1r.readLine()) != null) {
-						//memorizzo il contenuto del file in contenuto variabile di tipo StringBuffer
-						contenuto.append(st + "\n");
+
+						/*Se i=0, siamo sul primo file e quindi si catturano tutte le righe compresa la prima di intestazione	
+						 * Se invece i è diverso da zero, significa che siamo su un file successivo al primo e quindi 
+						 * per fare il merge devo saltare la riga di intestazione, ovvero devo catturare solo le righe che iniziano
+						 * con "RR"*/
+						if (i==0) {
+							//memorizzo il contenuto del file in contenuto variabile di tipo StringBuffer
+							contenuto.append(st + "\n");
+						}else {
+							if (st.startsWith("RR")) {
+								contenuto.append(st + "\n");
+							}
+						}
 					}
 					JOptionPane.showMessageDialog(finestrastruttura, "File letto", "Righe lette",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -264,16 +276,31 @@ public class ElaborazioneDatiART extends Finestra{
 					e.printStackTrace();
 				} 
 			}
-
+			i++;
 		}
-		//da implementare il parametro di ritorno return controlloflusso per dare l'esito
+		if (controlloflusso) {
+			//------------SALVATAGGIO FILE FINALE----------------
+			//per salvare il file definitivo utilizzo l'oggetto JFileChooser per scegliere il percorso
+			//e il nome del file
+			JFileChooser sceltafile = new JFileChooser();
+			//inserimento del filtro per ricercare solamente file di testo
+			FileNameExtensionFilter filter = new FileNameExtensionFilter(
+					"File di testo", "txt");
+			sceltafile.setFileFilter(filter);
+			int n=sceltafile.showSaveDialog(finestrastruttura);
+			if (n == JFileChooser.APPROVE_OPTION) {
+				File fout=sceltafile.getSelectedFile();
+				JOptionPane.showMessageDialog(finestrastruttura, fout.getPath());
+				salvafile(fout.getPath(),false);
+			}
+		}
 		return controlloflusso;
 	}
 	public void esegui_in_sequenza () {
 		/*Definisco un ArrayList per memorizzare i percorsi dei file elaborati in modo che siano disponibili poi
 		 *per il metodo merge.*/
 		ArrayList<String> percorsifile = new ArrayList<String>();
-		JOptionPane.showMessageDialog(finestrastruttura, "Fornire il percorso dei 2 file", "Avviso", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(finestrastruttura, "Fornire il percorso dei 2 file in ingresso", "Avviso", JOptionPane.INFORMATION_MESSAGE);
 		boolean esito_elaborazioni_successive=true;
 		for (int i = 0; i < 2; i++) {
 			esito_elaborazioni_successive= elaborazionetesto() && esito_elaborazioni_successive;
@@ -281,7 +308,7 @@ public class ElaborazioneDatiART extends Finestra{
 				//-----INSERIRE CONTROLLO SE VIENE SCELTO IL FILE O MENO
 				percorsifile.add(salvafile(percorsocompleto.toString(), true));
 			}
-			JOptionPane.showMessageDialog(finestrastruttura, esito_elaborazioni_successive);
+			//JOptionPane.showMessageDialog(finestrastruttura, esito_elaborazioni_successive);
 		}
 		System.out.print(percorsifile + "\n");
 		if (esito_elaborazioni_successive) {
