@@ -100,7 +100,7 @@ abstract class Finestra {
 	/**
 	 * Fa il merge dei due file elaborati
 	 */
-	abstract void mergefile();
+	abstract boolean mergefile();
 
 }
 

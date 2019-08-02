@@ -156,7 +156,7 @@ public class ElaborazioneDatiART extends Finestra{
 		}
 		return "";
 	}
-	public void mergefile() {
+	public boolean mergefile() {
 		boolean controlloflusso=false;
 		FileDialogWindows file1 = new FileDialogWindows("File di testo","txt");
 		if (file1.getEsito()==1) {
@@ -203,6 +203,7 @@ public class ElaborazioneDatiART extends Finestra{
 						f2r.close();
 						//Faccio il merge dei due file
 						txtArea.setText(txtArea.getText()+contenuto2.toString());
+						controlloflusso=true;
 						//------------SALVATAGGIO FILE FINALE----------------
 						//per salvare il file definitivo utilizzo l'oggetto JFileChooser per scegliere il percorso
 						//e il nome del file
@@ -231,6 +232,7 @@ public class ElaborazioneDatiART extends Finestra{
 				}
 			}
 		}
+		return controlloflusso;
 	}
 	/**
 	 * Overloading metodo mergefile: questo metodo accoda n file di testo in ingresso
@@ -290,7 +292,7 @@ public class ElaborazioneDatiART extends Finestra{
 			int n=sceltafile.showSaveDialog(finestrastruttura);
 			if (n == JFileChooser.APPROVE_OPTION) {
 				File fout=sceltafile.getSelectedFile();
-				JOptionPane.showMessageDialog(finestrastruttura, fout.getPath());
+				//JOptionPane.showMessageDialog(finestrastruttura, fout.getPath());
 				salvafile(fout.getPath(),false);
 			}
 		}
