@@ -59,35 +59,29 @@ public class ElaborazioneDatiART extends Finestra{
 					int righenonvuote=0;
 					int righecorrette=0;
 					while ((st=br.readLine())!=null) {
+						//Uso stTemp per avere una variabile che reinizializzo ogni ciclo while
+						String stTemp=st;
 						//intanto escludiamo le righe vuote
-						int lunghezza=st.length();
+						int lunghezza=stTemp.length();
 						if (lunghezza!=0) {
 							//Inizio conteggio righe corrette (iniziano con RR e finiscono con ;
-							if (st.startsWith("RR") && st.charAt(lunghezza-1) ==';') {
+							if (stTemp.startsWith("RR") && stTemp.charAt(lunghezza-1) ==';') {
 								righecorrette++;
 							}
 							//Fine conteggio righe corrette
 							//Inserire qui controllo per intestazione
-							if(st.startsWith("ID")) {
-								//txtArea.setText(txtArea.getText() + st + "\n");
-								content.append(st + "\n");
-							}	else if (st.startsWith("RR")) {
-								//txtArea.setText(txtArea.getText() + st + "\n");
-								content.append(st + "\n");
+							if(stTemp.startsWith("ID")) {
+								content.append(stTemp + "\n");
+							}	else if (stTemp.startsWith("RR")) {
+								content.append(stTemp + "\n");
 							} else {
 								//il controllo sulla lunghezza serve per escludere la prima riga di intestazione che va scartata
 								//infatti quando si processa la prima riga la lunghezza txtArea è ancora vuoto.
 								if (content.length()!=0) {
-									//Togliere la stringa \n nel testo
-									//int lung = txtArea.getText().length();
 									int lungs = content.length();
 									content.deleteCharAt(lungs-1);
 									//Prendo la sottostringa escludendo il carattere \n
-									//String modificastringa = (txtArea.getText().substring(0, lung - 1) + " ");
-									//txtArea.setText(modificastringa);
-									//System.out.println("Stampa carattere" + txtArea.getText().charAt(lung-1)+"Vediamo che esce");
-									//txtArea.setText(txtArea.getText() + st + "\n");
-									content.append(" "+ st + "\n");
+									content.append(" "+ stTemp + "\n");
 								}
 							}
 							righenonvuote++;
