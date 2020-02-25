@@ -68,11 +68,20 @@ public class ElaborazioneDatiART extends Finestra{
 								righecorrette++;
 							}
 							//Fine conteggio righe corrette
-							//Inserire qui controllo per intestazione
+							//la prima riga deve essere l'intestazione
 							if(st.startsWith("ID")) {
 								content.append(st + "\n");
-							}	else if (st.startsWith("RR")) {
-								content.append(st + "\n");
+							}	else if (st.startsWith("RR")) {							
+								if (st.endsWith(";")) {
+									//se la riga inizia con RR e finisce con ; si inserisce nel file con ritorno accapo
+									content.append(st + "\n");
+									/*se la riga non finisce con ; significa che la riga successiva è il seguito
+									e quindi la appendo e ci aggiungo uno spazio che verrà cancellato nel caso la 
+									riga successiva non cominci con RR*/
+								} else {
+									content.append(st+" ");
+								}
+
 							} else {
 								//il controllo sulla lunghezza serve per escludere la prima riga di intestazione che va scartata
 								//infatti quando si processa la prima riga la lunghezza txtArea è ancora vuoto.
